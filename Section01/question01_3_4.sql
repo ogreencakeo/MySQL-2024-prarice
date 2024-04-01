@@ -10,6 +10,9 @@ SELECT * FROM EMP;
 -- 형식이 뜨는데 UTF-8로 설정후 다음을 누르면 쉼표로 구분을 해주면 된다.
 -- 2. 저장된 .CSV 파일을 메모장으로 열어서 다른 이름으로 저장을 할 때, 인코딩을 ANSI로 설정후 저장을 하고 엑셀로 열면 된다.
 
+-- 엑셀 데이터를 데이블로 가져오기 (import)를 하고자 한다면, MySQL은 UTF-8 형태로 지원 
+-- csv 파일로 가져올 때는 반드시 UTF-8로 맞춰 글자 깨짐 현상이 없다.
+
 CREATE TABLE EMP(
 	deptNO INT NOT NULL,
     deptName char(10),
