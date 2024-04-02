@@ -16,7 +16,7 @@ create table usertbl(
     addr varchar(4) not null, 		-- 주소
     mobile1 varchar(3), 			-- 휴대폰의 앞자리 번호(010, 016, 011, 017, 019)
     mobile2 varchar(8), 			-- 휴대폰의 나머지 번호(하이픈(-)을 제외한 값)
-    heigth smallint, 				-- 키(samllint는 2바이트임)
+    height smallint, 				-- 키(samllint는 2바이트임)
     mDate date 						-- 회원 가입일
 );
 
