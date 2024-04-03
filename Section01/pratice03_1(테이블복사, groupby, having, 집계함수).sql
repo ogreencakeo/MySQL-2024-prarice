@@ -100,8 +100,5 @@ order by sum(price * ammount) desc;
 -- num을 추가하게 되면 건바이건까지 다 출력
 select num, groupName, sum(price * ammount) 
 	from buytbl
-group by groupname, num;
-
-
-select * from buytbl;
-
+group by groupname, num
+with rollup;
