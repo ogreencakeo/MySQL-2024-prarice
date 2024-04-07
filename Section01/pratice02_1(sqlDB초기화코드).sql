@@ -11,7 +11,7 @@ select * from usertbl;
 drop table if exists usertbl;
 create table usertbl(
 	userID varchar(8) not null primary key, -- 사용자 아이디(PK)
-    name varchar(10) not null, 		-- 이름
+    username varchar(10) not null, 		-- 이름
     birthYear int not null, 		-- 출생년도
     addr varchar(4) not null, 		-- 주소
     mobile1 varchar(3), 			-- 휴대폰의 앞자리 번호(010, 016, 011, 017, 019)
