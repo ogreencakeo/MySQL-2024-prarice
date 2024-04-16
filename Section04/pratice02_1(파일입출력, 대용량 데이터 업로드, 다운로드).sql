@@ -124,7 +124,39 @@ insert into movietbl values (null, 'mysql1', 'oracle1', '대표1',
 insert into movietbl values (null, 'mysql1', 'oracle1', '대표1', 
 	load_file('C:\\SQL\\Movies\\Mohikan.txt'), load_file('C:\\SQL\\Movies\\employees_copy.csv'));
 
+-- 텍스트 파일, 이미지 파일(.png) 를 테이블에 저장
+insert into movietbl values (null, 'mysql1', 'oracle1', '대표1', 
+	load_file('C:\\SQL\\Movies\\Mohikan.txt'), load_file('C:\\SQL\\Movies\\mysql_logo.png'));
+
 -- 아래와 같이 한글로 된 파일명을 주면 테이블에 저장이 되지 않으므로 영문으로 이름을
 -- 바꿔서 업로드 하도록 하자.
 select *
 	from movietbl;
+
+-- 동영상 다운받기
+select movie_film
+	from movietbl
+where movie_id = 1
+into dumpfile "C:\\SQL\\Movies\\test_copy.mp4";
+
+-- 한글 파일 다운받기
+select movie_film
+	from movietbl
+where movie_id = 3
+into dumpfile "C:\\SQL\\Movies\\dbms_copy.docx";
+
+-- 엑셀 파일 다운받기
+select movie_film
+	from movietbl
+where movie_id = 4
+into dumpfile "C:\\SQL\\Movies\\employees_copy2.csv";
+
+-- 이미지 파일 다운받기
+select movie_film
+	from movietbl
+where movie_id = 5
+into dumpfile "C:\\SQL\\Movies\\mysql_logo_copy.png";
+
+-- optimize table 테이블명 : 대량의 데이터를 삭제를 했던가, 테이블에 잦을 변화가 있을 경우
+-- 사용하면 유용하다. 미사용 영역을 해제해주고, 데이터 파일을 최적화 할 수가 있다.
+optimize table movietbl;
