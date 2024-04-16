@@ -107,3 +107,24 @@ create table movietbl(
 ) default charset=utf8mb4;
 
 desc movietbl;
+
+-- 쿼리를 날린 후에, Lost Connection to MySQL Server during query 에러가 뜰 때가 있다.
+-- 이 에러를 해결하기 위해서는 Editor -> SQL Editor -> DBMS connection read time out의 값에
+-- 3,600초(1시간)를 설정을 해주면 에러가 해결 될 것이다.
+
+-- 텍스트 파일, 동영상
+insert into movietbl values (null, 'mysql1', 'oracle1', '대표1', 
+	load_file('C:\\SQL\\Movies\\Mohikan.txt'), load_file('C:\\SQL\\Movies\\test.mp4'));
+
+-- 텍스트 파일, 한글파일(.docx) 를 테이블에 저장
+insert into movietbl values (null, 'mysql1', 'oracle1', '대표1', 
+	load_file('C:\\SQL\\Movies\\Mohikan.txt'), load_file('C:\\SQL\\Movies\\dbms.docx'));
+
+-- 텍스트 파일, 엑셀파일(.csv) 를 테이블에 저장
+insert into movietbl values (null, 'mysql1', 'oracle1', '대표1', 
+	load_file('C:\\SQL\\Movies\\Mohikan.txt'), load_file('C:\\SQL\\Movies\\employees_copy.csv'));
+
+-- 아래와 같이 한글로 된 파일명을 주면 테이블에 저장이 되지 않으므로 영문으로 이름을
+-- 바꿔서 업로드 하도록 하자.
+select *
+	from movietbl;
