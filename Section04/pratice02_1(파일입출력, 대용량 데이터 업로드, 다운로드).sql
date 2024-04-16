@@ -49,3 +49,61 @@ select *
   fields terminated by ',' optionally enclosed by '"'
   escaped by '\\'
   lines terminated by '\n';
+  
+-- 외부의 데이터를 가져와보자. 먼저 테이블을 생성하도록 하자.
+drop table if exists membertbl;
+-- like를 활용하면 테이블의 구조뿐만 아니라 제약조건까지 다 복사해온다.
+create table membertbl like usertbl;
+
+desc membertbl;
+
+truncate membertbl;
+
+select *
+	from membertbl;
+
+-- 외부 텍스트 파일을 테이블로 읽어들이기
+load data infile 'C:\\SQL\\Movies\\usertbl_copy.txt'
+	into table membertbl character set utf8mb4
+fields terminated by ','
+enclosed by '"'
+lines terminated by '\n';
+-- ignore 1 rows; -- 제목줄이 있을대 1행을 무시하고 테이블에 행을 저장해라.
+
+-- 엑셀 파일을 읽어들이기 위한 테이블 생성
+drop table if exists employees_text;
+
+create table employees_text like employees.employees;
+desc employees_text;
+
+select *
+	from employees_text;
+
+-- 외부 엑셀 파일을 테이블에 읽어들이기
+load data infile 'C:\\SQL\\Movies\\employees_copy.csv'
+	into table employees_text character set utf8mb4
+fields terminated by ','
+enclosed by '"'
+lines terminated by '\n'
+ignore 1 rows; -- 제목줄이 있을대 1행을 무시하고 테이블에 행을 저장해라.
+
+-- 위에서 파일을 내보내고, 테이블로 읽어들이기 등 정말 중요하다. (현업 사용이 많음)
+-- 명령어를 반드시 기억을 했으면 좋다.
+
+drop database moviedb;
+create database moviedb;
+
+use moviedb;
+
+drop table if exists movietbl;
+-- 동영상(바이너리 파일)과 시나리오를 저장하기 위한 테이블을 생성함
+create table movietbl(
+	movie_id int auto_increment primary key,
+    movie_title varchar(30),
+    movie_director varchar(20),
+    movie_star varchar(20),
+    movie_script longtext,
+    movie_film longblob
+) default charset=utf8mb4;
+
+desc movietbl;
