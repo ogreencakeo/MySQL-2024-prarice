@@ -165,10 +165,10 @@ select s.stdname, s.addr, c.clubname, c.roomnumber
     order by s.stdname;
 
 -- 동아리명 기준으로 쿼리문을 만들어보자
-select s.stdname, s.addr, c.clubname, c.roomnumber
-	from stdtbl s
+select c.clubname, c.roomnumber, s.stdname, s.addr
+	from clubtbl c
     inner join stdclubtbl sc
-    on s.stdname = sc.stdname
-    inner join clubtbl c
-    on sc.clubname = c.clubname
-    order by s.stdname;
+    on c.clubname = sc.clubname
+    inner join stdtbl s
+    on sc.stdname = s.stdname
+    order by c.clubname;
