@@ -103,3 +103,72 @@ select U.userid, U.username,
             where U.userid = B.userid
     );
     
+-- 다대다의 관계를 테이블을 생성하여 조인을 해보도록 하자.
+
+-- 학생 테이블
+drop table if exists stdtbl;
+create table stdtbl(
+	stdname varchar(10) not null primary key,
+    addr varchar(5) not null
+);
+
+desc stdtbl;
+
+-- 동아리 테이블
+drop table if exists clubtbl;
+create table clubtbl(
+	clubname varchar(10) not null primary key,
+    roomnumber varchar(5) not null
+);
+
+desc clubtbl;
+
+-- stdclubtbl을 만들어줘서 학생, 동아리 테이블에서 서로 필요한 데이터를
+-- 가져갈 수 있도록 만들어준다.
+
+drop table if exists stdclubtbl;
+create table stdclubtbl(
+	num int auto_increment not null primary key,
+	stdname varchar(10) not null,
+    clubname varchar(10) not null,
+    foreign key (stdname) references stdtbl(stdname),
+    foreign key (clubname) references clubtbl(clubname)
+);
+
+desc stdclubtbl;
+
+-- 데이터 삽입하기
+insert into stdtbl values ('강호동','경북'),('김제동','경남'),('김용만','서울'),
+('이휘재','경기'),('박수홍','서울');
+
+insert into clubtbl values ('수영','101호'),('바둑','102호'),('축구','103호'),
+('봉사','104호');
+
+insert into stdclubtbl values (null, '강호동','바둑'),(null, '강호동','축구'),
+(null, '김용만','축구'),(null, '이휘재','축구'),(null, '이휘재','봉사'),
+(null, '박수홍','봉사');
+
+select * from stdtbl;
+select * from clubtbl;
+select * from stdclubtbl;
+
+-- 위에서 만든 테이블 3개를 조인을 해서 이름, 지역, 동아리명, 동아리방 호수를 출력해보자
+-- 여기서 조인을 하기 위해서 대부분 PK와 FK를 가지고 설정하는 경우가 많다는 것이다.
+
+-- 학생명을 기준으로 쿼리문을 만들어보자.
+select s.stdname, s.addr, c.clubname, c.roomnumber
+	from stdtbl s
+    inner join stdclubtbl sc
+    on s.stdname = sc.stdname
+    inner join clubtbl c
+    on sc.clubname = c.clubname
+    order by s.stdname;
+
+-- 동아리명 기준으로 쿼리문을 만들어보자
+select s.stdname, s.addr, c.clubname, c.roomnumber
+	from stdtbl s
+    inner join stdclubtbl sc
+    on s.stdname = sc.stdname
+    inner join clubtbl c
+    on sc.clubname = c.clubname
+    order by s.stdname;
