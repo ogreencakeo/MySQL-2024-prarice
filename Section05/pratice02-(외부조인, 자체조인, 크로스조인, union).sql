@@ -91,3 +91,34 @@ select * from stdtbl;
 select *
 	from buytbl
 cross join usertbl;
+
+-- 셀프 조인
+-- 셀프조인이란 테이블 하나로 두번 이상 엮어서 결과값을 추출해내는 방법이다.
+-- 셀프조인은 주로 테이블이 계층적인 구조를 수평적인 관계로 바꾸는 역할을 한다.
+use sqldb;
+drop table if exists emptbl;
+create table emptbl(
+	emp char(3) not null primary key,
+    manager char(3),
+    emptel varchar(8)
+);
+
+insert into emptbl values ('나사장', null, '0000'),
+('김재무', '나사장', '2222'),('김부장', '김재무', '2222-1'),('이부장', '김재무', '2222-2'),
+('우대리', '이부장', '2222-2-1'),('지사원', '이부장', '2222-2-2'),('이영업', '나사장', '1111'),
+('한과장', '이영업', '1111-1'),('최정보', '나사장', '3333'),('윤차장', '최정보', '3333-1'),
+('이주임', '윤차장', '3333-1-1');
+
+select * 
+	from emptbl
+    where emp = "우대리";
+
+-- 아래 코드는 우대리의 상관인 이부장의 전화번호를 추출해내는 쿼리문이다.
+-- emptbl을 마치 2개가 있는 것 처럼 만들어서 분리해서 생각하고 조건을 설정할 때
+-- manager 필드와 emp 필드가 같고 where 절에 우대리로 조건을 설정을 하면 된다.
+-- 개념이 조금 어렵다.
+select A.emp as '부하직원', B.emp as '직속상관', B.emptel
+	from emptbl A
+    inner join emptbl B
+    on A.manager = B.emp
+    where A.emp = "우대리";
