@@ -115,5 +115,5 @@ select * from worker;
 
 #문제 62
 #위의 두 테이블의 카티션 곱을 구하시오.
-select * from membertbl
+select count(*) from membertbl
 cross join worker;
