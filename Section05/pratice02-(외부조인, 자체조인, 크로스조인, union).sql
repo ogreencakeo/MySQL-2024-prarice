@@ -122,3 +122,22 @@ select A.emp as '부하직원', B.emp as '직속상관', B.emptel
     inner join emptbl B
     on A.manager = B.emp
     where A.emp = "우대리";
+    
+-- not in과 in을 알아보자.
+-- not in은 서브쿼리나 데이터 값을 제외할 때 사용되는 것이고,
+-- in은 포함할 때 사용하는 것이다.
+-- 핸드폰 번호가 없는 사람들을 제외하고 출력하는 쿼리문을 만들어보자.
+select username, concat(mobile1, mobile2) as '연락처'
+	from usertbl
+	where username not in(
+		select username
+			from usertbl
+        where mobile1 is null);
+
+-- 반대로 in을 쓰게 된다면 핸드폰 번호가 없는 사람만 출력하게 될 것이다.
+select username, concat(mobile1, mobile2) as '연락처'
+	from usertbl
+    where username in (
+		select username
+			from usertbl
+		where mobile1 is null);
