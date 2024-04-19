@@ -118,3 +118,50 @@ delimiter //
 delimiter ;
 
 call CaseProc();
+
+-- Section 05 초기화 시킨 후, 아래 쿼리를 해보자.
+use sqldb;
+
+-- 총 구매액을 기준으로 userid 출력
+select userid, sum(price * amount) as '총 구매액'
+	from buytbl
+    group by userid
+    order by sum(price * amount) desc;
+
+select * from buytbl;
+select * from usertbl;
+
+-- 고객 이름이 없으니 조인을 이용해서 usertbl과 엮도록 하자.
+-- 내부조인을 하게 되면 구매내역만 있는 고객만 출력이 된다.
+select U.userid, U.username, 
+	sum(B.price * B.amount) as '총 구매액' from buytbl B
+    inner join usertbl U
+    on B.userid = U.userid
+    group by U.userid, U.username
+    order by sum(B.price * B.amount) desc;
+    
+-- 외부조인을 다시 하여 구매하지 않은 고객까지 출력을 해보도록 해야지 고객의 등급을
+-- 나눌 수가 있다.
+select U.userid, U.username, 
+	sum(B.price * B.amount) as '총 구매액' from buytbl B
+    right outer join usertbl U
+    on B.userid = U.userid
+    group by U.userid, U.username
+    order by sum(B.price * B.amount) desc;
+
+-- 고객 등급 나누어서 출력하기
+-- select문 안에 하나의 컬럼처럼 고객등급을 case when then 구문으로 설정함.
+select U.userid, U.username, 
+	sum(B.price * B.amount) as '총 구매액' ,
+    case 
+		when sum(B.price * B.amount) >= 1500 then '최우수고객'
+        when sum(B.price * B.amount) >= 1000 then '우수고객'
+        when sum(B.price * B.amount) >= 1 then '일반고객'
+        else '유령고객'
+        end as '고객등급'
+	from buytbl B
+    right outer join usertbl U
+    on B.userid = U.userid
+    group by U.userid, U.username
+    order by sum(B.price * B.amount) desc;
+        
