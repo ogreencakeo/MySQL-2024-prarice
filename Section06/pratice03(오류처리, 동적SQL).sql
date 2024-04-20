@@ -61,6 +61,7 @@ create table mytable(
 set @curdate = current_timestamp();
 prepare myQuery	from 'insert into mytable values (null, ?)';
 execute myQuery using @curdate;
+-- 메모리 해제하는 부분
 deallocate prepare myQuery;
 
 select * 
