@@ -75,7 +75,7 @@ drop procedure if exists usp_emp;
 delimiter //
 	create procedure usp_emp()
     begin
-		select empno, ename, sal, comm, deptno 
+		select empno '사원번호' , ename '이름' , sal '월급' , comm '보너스' , deptno '부서번호' 
 			from emp 
 			where comm is null
             order by deptno asc;
@@ -83,15 +83,73 @@ delimiter //
 delimiter ;
 
 call usp_emp();
+
 #문제78. 학점을 출력하는 프로그램을 중첩 if문을 사용하는 프로시져를 만들어라.
 #프로시져명 : grade_Proc()
 #60점 미만 F, 60 ~ 64까지 D, 65 ~ 69까지 D+
 #70 ~74까지 C, 75 ~ 79까지 C+
 #80 ~ 84까지 B, 85 ~ 89까지 B+
 #90 ~ 94까지 A, 95 ~ 100까지 A+
+drop procedure if exists grade_Proc;
+delimiter //
+	create procedure grade_Proc()
+    begin
+		declare score int;
+        declare grade char(2);
+		
+        set score = 88;
+        
+        if(score >= 90) then
+			if(score >= 95) then set grade = 'A+';
+			else set grade = 'A';
+			end if;
+		elseif(score >= 80) then
+			if(score >= 85) then set grade = 'B+';
+			else set grade = 'B';
+			end if;
+       elseif(score >= 70) then
+			if(score >= 75) then set grade = 'C+';
+			else set grade = 'C';
+			end if;
+		elseif(score >= 60) then
+			if(score >= 65) then set grade = 'D+';
+			else set grade = 'D';
+			end if;
+		else set grade = 'F';
+		end if;
+        
+        select concat('취득점수', score, '이며, 학점은 ', grade, '입니다.');
+    end //
+delimiter ;
+
+call grade_Proc();
 
 #문제79. 문제78번을 case문으로 만들어보라.
 #프로시져명 : grade_case_Proc()
+drop procedure if exists grade_case_Proc;
+delimiter //
+	create procedure grade_case_Proc()
+    begin
+		declare score int;
+        declare grade varchar(2);
+        set score = 68;
+        case
+			when score >= 95 then set grade = 'A+';
+            when score >= 90 then set grade = 'A';
+            when score >= 85 then set grade = 'B+';
+            when score >= 80 then set grade = 'B';
+            when score >= 75 then set grade = 'C+';
+            when score >= 70 then set grade = 'C';
+            when score >= 65 then set grade = 'D+';
+            when score >= 60 then set grade = 'D';
+            else set grade = 'F';
+            end case;
+            
+            select concat('취득점수', score, '이며, 학점은 ', grade, '입니다.');
+    end //
+delimiter ;
+
+call grade_case_Proc();
 
 #문제80. 계절을 출력하는 프로시져를 만들어라(case문 사용)
 #12,1,2 : 겨울
@@ -102,6 +160,27 @@ call usp_emp();
 #변수를 선언하여 5월로 지정합니다.
 #출력결과
 #5월은 봄입니다. 
+drop procedure if exists season_Proc;
+delimiter //
+	create procedure season_Proc()
+    begin
+		declare today_month char(5);
+		declare season char(5);
+        
+        set today_month = 5;
+        
+        case
+			when today_month between 12 and 2 then set season = '겨울';
+			when today_month between 3 and 5 then set season = '봄';
+            when today_month between 6 and 8 then set season = '여름';
+            else set season = '가을';
+		end case;
+        
+		select concat(today_month, '월은' ,season, '입니다.');
+	end //
+delimiter ;
+
+call season_Proc();
 
 #문제81. 계산기 프로그램을 만들어봅니다.
 #프로시져명 : calc_Proc()
