@@ -260,11 +260,62 @@ call identy_Proc();
 #1~100까지의 합을 구하는데, 2와 3의 공배수는 더하지 않고 나머지 수의 
 #합계를 구하는 프로시져를 구현하시오
 #프로시져명 : multiple_Proc()
+drop procedure if exists multiple_Proc;
+delimiter //
+	create procedure multiple_Proc()
+    begin
+		declare i int;
+        declare sum int;
+        
+        set i = 1;
+        set sum = 0;
+        
+        mywhile : while (i <= 100) do
+			if(i % 2 = 0) and (i % 3 = 0) then
+				set i = i + 1;
+				iterate mywhile;
+			end if;
+            set sum = sum + i;
+            set i = i + 1;
+		
+        end while;
+        
+        select sum as '결과';
+    end //
+delimiter ;
+
+call multiple_Proc();
 
 #문제84
 #1~1000까지 합을 구하는데 7의 배수이거나 9의 배수는 합에 포함하지 않고,
 #나머지 수의 합계를 구하는 프로시져를 구현하시오/
 #프로시져명 : multiple_Proc79()
+drop procedure if exists multiple_Proc79;
+delimiter //
+	create procedure multiple_Proc79()
+    begin
+		declare i int;
+        declare sum int;
+        
+        set i = 1;
+        set sum = 0;
+        
+        mywhile : while (i <= 100) do
+			if(i % 7 = 0) or (i % 9 = 0) then
+				set i = i + 1;
+				iterate mywhile;
+			end if;
+            
+            set sum = sum + i;
+            set i = i + 1;
+		
+        end while;
+        
+        select sum as '결과';
+    end //
+delimiter ;
+
+call multiple_Proc79();
 
 #문제 85
 #직급을 저장할 변수를 선언하여 차장으로 저장합니다.
@@ -279,3 +330,23 @@ call identy_Proc();
 출력결과		
 차장의 월급은 600만원입니다.		
 */
+drop procedure if exists sal_Proc;
+delimiter //
+	create procedure sal_Proc()
+    begin
+		declare job varchar(2);
+        declare sal int;
+        set job = '차장';
+        case 
+			 when job = '상무' then set sal = 1000;
+             when job = '부장' then set sal = 800;
+             when job = '차장' then set sal = 600;
+             when job = '과장' then set sal = 400;
+			 when job = '대리' then set sal = 250;
+			 when job = '사원' then set sal = 180;
+		end case;
+		select concat(job, '의 월급은 ', sal, '만원입니다.');
+	end //
+delimiter ;
+
+call sal_Proc();
