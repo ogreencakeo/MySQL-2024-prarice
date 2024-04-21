@@ -189,6 +189,34 @@ call season_Proc();
 #연산 변수는 *연산자로 저장합니다
 #출력결과
 #10과 5의 곱은 50입니다.
+drop procedure if exists calc_Proc;
+delimiter //
+	create procedure calc_Proc()
+    begin
+		declare x int;
+        declare y int;
+        declare operator char(1);
+        declare result int;
+        
+        set x = 10;
+        set y = 5;
+        set operator = '*';
+        set result = 0;
+        
+        case
+			when operator = '+' then set result = x + y;
+            when operator = '-' then set result = x - y;
+			when operator = '/' then set result = x / y;
+			when operator = '*' then set result = x * y;
+            when operator = '%' then set result = x % y;
+		end case;
+        
+        select concat(x, '과 ', y, '의 곱은 ', result, '입니다.');
+        
+    end //
+delimiter ;
+
+call calc_Proc();
 
 #문제82. 
 #주민등록번호를 변수를 선언하여 임의로 저장한 후, 7번째 자리를 가지고 아래와 같은 결과값을 출력하는 
@@ -197,6 +225,36 @@ call season_Proc();
 #if문을 사용하여 1,2,3,4에 따라 아래와 같이 출력하세요
 #출력결과
 #당신은 2000년 이전에 출생한 남자입니다.
+drop procedure if exists identy_Proc;
+delimiter //
+	create procedure identy_Proc()
+    begin
+		declare juminNo char(14);
+        declare gender char(2);
+        declare age char(10);
+        
+        set juminNo = '890315-1695442';
+        
+        if (substring(juminNo, 8, 1) = '1' ) then 
+			set gender = '남자';
+            set age = '2000년 이전';
+		elseif (substring(juminNo, 8, 1) = '2' ) then 
+			set gender = '여자';
+            set age = '2000년 이전';
+		elseif (substring(juminNo, 8, 1) = '3' ) then 
+			set gender = '남자';
+            set age = '2000년 이후';
+		elseif (substring(juminNo, 8, 1) = '4' ) then 
+			set gender = '여자';
+            set age = '2000년 이후';
+		end if;
+        
+        select concat('당신은 ', age, '에 출생한 ', gender, '입니다.');
+    
+    end //
+delimiter ;
+
+call identy_Proc();
 
 #문제83
 #1~100까지의 합을 구하는데, 2와 3의 공배수는 더하지 않고 나머지 수의 
