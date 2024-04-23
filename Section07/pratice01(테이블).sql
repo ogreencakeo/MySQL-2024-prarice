@@ -76,3 +76,21 @@ set foreign_key_checks = 1;
 
 select * 
 	from buyTBL;
+
+-- 테이블 삭제
+-- usertbl 테이블이 삭제되지 않는다.
+-- 이유는 usertbl이 참조하는 buytbl이 있다. 외래키로써 두 테이블은 관계를
+-- 맺고 있어서 삭제가 되지 않는다. 하여, usertbl을 삭제를 하려면 
+-- 먼저 buytbl을 삭제를 하고 그 후에 usertbl을 삭제 할 수가 있다.
+-- 아니면, 외래키 기능을 해제시키거나, alter table을 이용하여
+-- buytbl에 있는 외래키를 drop 시키고 삭제가 가능하다.    
+drop table usertbl;
+-- 첫 번째 방법은 자식 테이블 즉, 외래키가 있는 테이블을 drop을 하고
+-- 부모 테이블을 삭제한다.
+drop table buytbl;
+
+-- 두 번째 방법은 자식테이블 외래키 기능을 삭제하거나 기능 해제하는 코드를
+-- 넣어서 usertbl을 삭제한다.
+set foreign_key_checks = 1;
+alter table buytbl
+drop foreign key FK_usertbl_buytbl;
