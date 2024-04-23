@@ -38,10 +38,41 @@ create table buytbl(
     -- constraint FK_usertbl_buytbl foreign key (userid) references usertbl(userid)
 );
 
--- 아래 코드는 테이블의 제약조건을 보는 것이다.
+-- 아래 코드는 테이블의 인덱스에 대한 것을 보는 코드이다.
 show index from buytbl;
 
--- 외래키를 alter table을 가지고 외래키를 추가하는 코드
+-- 외래키를 alter table을 가지고 외래키를 추가하는 코드 (현업에서 자주 사용되는 코드)
 alter table buytbl
 add constraint FK_usertbl_buytbl
 foreign key (userid) references usertbl(userid);
+
+-- 외래키를 alter table을 가지고 외래키를 삭제하는 코드
+alter table buytbl
+drop foreign key FK_usertbl_buytbl;
+
+-- 아래 코드는 mySQL에 생성되어져 있는 모든 DB에 있는 table에 제약조건을 보는 코드이다.
+select *
+	from information_schema.table_constraints;
+    
+
+INSERT INTO userTBL VALUES('YJS', '유재석', 1972, '서울', '010', '11111111', 178, '2008-8-8');
+INSERT INTO userTBL VALUES('KHD', '강호동', 1970, '경북', '011', '22222222', 182, '2007-7-7');
+INSERT INTO userTBL VALUES('KKJ', '김국진', 1965, '서울', '019', '33333333', 171, '2009-9-9');
+
+-- 아래 코드를 입력하고 실행을 시키면 에러가 난다.
+-- 왜일까 ? => 바로, KYM에서 오류가 발생한 것을 확인할 수가 있다.
+-- 그 이유는 바로 부모테이블이 되는 usertbl에 KYM이라는 데이터가 없기 때문이다.
+-- 회원정보가 없는데 어떻게 구매를 할 수 있겠나?
+-- 해결방법은 2가지가 있다.
+INSERT INTO buyTBL VALUES(NULL, 'KHD', '운동화', NULL   , 30,   2);
+INSERT INTO buyTBL VALUES(NULL, 'KHD', '노트북', '전자', 1000, 1);
+INSERT INTO buyTBL VALUES(NULL, 'KYM', '모니터', '전자', 200,  1);
+
+-- 외래키의 기능을 해제시킨다.
+set foreign_key_checks = 0;
+
+-- 외래키의 기능을 활성화시킨다.
+set foreign_key_checks = 1;
+
+select * 
+	from buyTBL;
