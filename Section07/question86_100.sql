@@ -124,8 +124,7 @@ create table dept01(
     loc varchar(13) not null
 );
 
-insert into dept01 values (10, '경리부', '서울');
-insert into dept01 values (20, '인사부', '인천');
+insert into dept01 values (10, '경리부', '서울'), (20, '인사부', '인천');
 
 -- 문제95
 -- emp01테이블을 생성하시오. 그리고 데이터를 삽입하시오			
@@ -137,11 +136,22 @@ insert into dept01 values (20, '인사부', '인천');
 -- deptno	int				FK설정
 -- 1000, '허준', '사원', 10			
 -- 1010, '홍길동', '사원', 50	
+drop table if exists emp01;
+create table emp01(
+	empno int not null primary key,
+    ename varchar(10) not null,
+    job varchar(13) not null unique,
+    deptno int not null,
+    foreign key(deptno) references dept01(deptno)
+);
+
+insert into emp01 values (1000, '허준', '사원', 10);
+insert into emp01 values (1010, '홍길동', '사원', 50);
 
 -- 1010데이터를 삽입할 때 분명 에러가 발생한다.			
 -- 에러 발생 이유가 무엇인가?			
 -- 이유 : emp01테이블에 job이 unique제약조건을 가지고 있기에 데이터 삽입 안된다.
--- emp01 부서번호 50이 삽입이 되고 있다.하지만 부모테이블인 dept01에는 부서번호가 50은 없으므로 데이터 삽입이 되질 않는다.			
+-- emp01 부서번호 50이 삽입이 되고 있다. 하지만 부모테이블인 dept01에는 부서번호가 50은 없으므로 데이터 삽입이 되질 않는다.			
 -- 해결방법은 2가지이다. 			
 -- 해결 방법을 제시하시오.			
 -- 해결방법 :			
@@ -151,16 +161,20 @@ insert into dept01 values (20, '인사부', '인천');
 
 -- 문제96			
 -- 문제95에서 1번째 해결방법을 쿼리문으로 만들어서 1010데이터 부분을 삽입하시오	
+drop index job on emp01;
 
 -- 문제97			
 -- 문제95에서 2번째 해결방법을 쿼리문으로 만들어서 1010데이터부분을 			
 -- 삽입하시오	
+insert into dept01 values(50, '전산부', '대구');
+insert into emp01 values (1010, '홍길동', '사원', 50);
 
 -- 문제98
 -- dept01테이블을 제거하시오	
+drop table dept01;
 	
 -- 분명 에러가 발생한다.			
--- 에러 이유 :	 emp01테이블의 deptno와 함께 외래키로 묶여있기 때문(부모, 자식 관계)		
+-- 에러 이유 : emp01테이블의 deptno와 함께 외래키로 묶여있기 때문(부모, 자식 관계)		
 -- 해결방법
 -- 해결방법 2가지가 있습니다.			
 -- 1. emp01의 테이블을 먼저 제거하고 난 후 dept01을 제거하면 된다.
@@ -168,6 +182,12 @@ insert into dept01 values (20, '인사부', '인천');
 
 -- 문제99			
 -- 문제98에서 1번째 해결방법으로 쿼리문으로 작성하여 dept01을 제거하시오	
+drop table emp01;
+drop table dept01;
 
 -- 문제100			
--- 문제98에서 2번째 해결방법으로 쿼리문으로 작성하여 dept01을 제거하시오		
+-- 문제98에서 2번째 해결방법으로 쿼리문으로 작성하여 dept01을 제거하시오	
+alter table emp01
+	drop foreign key emp01_ibfk_1;
+    
+drop table dept01;
