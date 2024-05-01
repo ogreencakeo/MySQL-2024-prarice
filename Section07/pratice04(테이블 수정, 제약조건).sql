@@ -168,4 +168,23 @@ alter table buytbl
 update usertbl
 	set userid = 'KKK' 
     where userid = 'KHD';
+    
+-- 확인 해보면 KKK로 바뀐 것을 확인할 수가 있다.
+select U.userid, U.username, B.prodname, U.addr
+	from usertbl U
+    right outer join buytbl B
+    on U.userid = B.userid;
 
+-- 제약조건 때문에 삭제가 안됨
+delete from usertbl
+	where userid = 'KKK';
+
+-- 해결방안
+alter table buytbl
+	drop foreign key FK_usertbl_buytbl;
+
+alter table buytbl
+	add constraint FK_usertbl_buytbl
+    foreign key (userid) references usertbl(userid)
+    on update cascade -- 수정시 따라서 수정
+    on delete cascade; -- 샥제시 따라서 삭제
