@@ -1,0 +1,26 @@
+[ 외래키(Foreign Key) ]
+외래키는 한 테이블의 필드가 다른 테이블의 기본 키(primary key)를 참조하는 제약 조건입니다. 
+이는 데이터의 무결성을 유지하기 위해 사용됩니다. 외래키를 통해 두 테이블 간의 관계를 정의할 수 있습니다.
+
+[ ON UPDATE CASCADE ]
+외래키에 ON UPDATE CASCADE 옵션을 설정하면, 참조된 테이블의 기본 키가 변경될 때, 
+이를 참조하는 테이블의 외래키 값도 자동으로 변경됩니다. 
+예를 들어, 사용자의 아이디가 변경되면 해당 사용자를 참조하는 다른 테이블의 외래키 값도 변경됩니다.
+
+[ ON DELETE CASCADE ]
+외래키에 ON DELETE CASCADE 옵션을 설정하면, 참조된 테이블의 행이 삭제될 때, 
+이를 참조하는 테이블의 관련 행도 자동으로 삭제됩니다. 
+예를 들어, 사용자 정보가 삭제되면 해당 사용자를 참조하는 다른 테이블의 관련 정보도 함께 삭제됩니다.
+
+예시 설명
+위의 SQL 코드에서 FK_usertbl_buytbl 외래키 제약 조건이 있는 경우, 
+ON UPDATE CASCADE 및 ON DELETE CASCADE 옵션을 사용하여 외래키 제약 조건을 정의하고 있습니다.
+
+예를 들어, usertbl의 userid가 변경될 때(ON UPDATE CASCADE), 
+해당 userid를 참조하는 buytbl의 관련 행의 userid도 자동으로 변경됩니다.
+
+마찬가지로, usertbl의 행이 삭제될 때(ON DELETE CASCADE), 해당 userid를 참조하는 buytbl의 관련 행도 자동으로 삭제됩니다.
+
+[ 외래키 제약 조건 해제 및 재설정 ]
+외래키 제약 조건은 ALTER TABLE 문을 사용하여 제거(DROP FOREIGN KEY)하고 다시 설정할 수 있습니다.
+외래키 제약 조건을 재설정할 때는 적절한 옵션(ON UPDATE CASCADE, ON DELETE CASCADE 등)을 함께 설정하여 데이터의 무결성을 유지할 수 있습니다.
