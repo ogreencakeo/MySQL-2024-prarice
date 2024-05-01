@@ -6,6 +6,17 @@
 -- emp_name	varchar(20)		
 -- salary	int 		
 -- birthday	date	
+drop database if exists mydb2;
+create database mydb2;
+use mydb2;
+
+drop table if exists employee;
+create table employee(
+	emp_no int,
+    emp_name varchar(20),
+    salary int,
+    birthday date
+);
 
 -- 테이블명 : project			
 -- 열이름		데이터형식		NULL허용		제약조건
@@ -13,45 +24,90 @@
 -- pro_content	varchar(20)		
 -- start_date	date		
 -- finish_date	date	
+drop table if exists project;
+create table project(
+	pro_no	int,		
+    pro_content	varchar(20),		
+    start_date	date,		
+    finish_date	date	
+);
 
 -- 테이블명 : specialty			
 -- 열이름		데이터형식		NULL허용	제약조건
 -- emp_no	  int		
 -- specialty  varchar(20)	
+drop table if exists specialty;
+create table specialty(
+	emp_no int,		
+    specialty varchar(20)
+);
 
 -- 테이블명 : assign			
 -- 열이름		데이터형식		NULL허용	제약조건
 -- emp_no	int		
 -- pro_no	int		
+drop table if exists assign;
+create table assign(
+	emp_no int,		
+    pro_no int
+);
 
 -- 제약 조건 추가 문제입니다. alter table을 사용하세요			
 -- 문제87			
--- empoyee테이블에 emp_no를 기본키를 추가하고 확인해보시오			
+-- employee테이블에 emp_no를 기본키를 추가하고 확인해보시오			
 -- 기본키명 : employee_pk	
+alter table employee
+	add constraint employee_pk
+	primary key employee(emp_no);
+desc employee;
 
 -- 문제88			
 -- project테이블에 pro_no컬럼을 기본키를 추가하고 확인해보시오			
 -- 기본키명 : project_pk	
+alter table project
+	add constraint  project_pk
+	primary key project(pro_no);
+desc project;
 
 -- 문제89
--- sepcialty테이블에 기본키를 추가하고 확인해보시오.(emp_no, specialty 2개 컬럼 다 pk지정)			
+-- specialty테이블에 기본키를 추가하고 확인해보시오.(emp_no, specialty 2개 컬럼 다 pk지정)			
 -- 기본키명 : specialty_pk	
+alter table specialty
+	add constraint specialty_pk
+	primary key sepcialty(emp_no, specialty);
+desc specialty;
 
 -- 문제90
 -- assign테이블에 기본키를 추가하고 확인해보시오.(emp_no, pro_no 2개 컬럼 다 pk로 지정)			
 -- 기본키명 : assign_pk	
+alter table assign
+	add constraint assign_pk
+    primary key assign(emp_no, pro_no);
+desc assign;
 
 -- 문제91
 -- specialty테이블에 외래키를 추가하고 확인해보시오.(emp_no를 외래키 설정)			
 -- 외래키명 : specialty_fk		
+alter table specialty
+	add constraint  specialty_fk
+    foreign key (emp_no) references employee(emp_no);
+desc specialty;
+select * 
+	from information_schema.table_constraints;
 
 -- 문제92
 -- assign테이블에 외래키를 추가하고 확인해보시오.(pro_no를 외래키 설정)			
--- 외래키명 : assing_project_fk		
-
+-- 외래키명 : assing_project_fk	
+alter table assign
+	add constraint assing_project_fk
+	foreign key (pro_no) references project(pro_no);
+	
 -- 문제93
 -- assign테이블에 외래키를 추가하고 확인해보시오.(emp_no를 외래키 설정)			
 -- 외래키명 : assign_employee_fk		
+alter table assign
+	add constraint assign_employee_fk
+    foreign key (emp_no) references employee(emp_no);
 
 -- 문제94
 -- dept01 테이블을 생성하시오. 그리고 데이터를 삽입하시오			
@@ -61,6 +117,15 @@
 -- loc		varchar(13)		x	
 -- 10, '경리부', '서울'			
 -- 20, '인사부', '인천'	
+drop table if exists dept01;
+create table dept01(
+	deptno int not null primary key,
+    dname varchar(14) not null,
+    loc varchar(13) not null
+);
+
+insert into dept01 values (10, '경리부', '서울');
+insert into dept01 values (20, '인사부', '인천');
 
 -- 문제95
 -- emp01테이블을 생성하시오. 그리고 데이터를 삽입하시오			
