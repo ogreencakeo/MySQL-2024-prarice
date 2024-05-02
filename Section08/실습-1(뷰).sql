@@ -25,7 +25,7 @@ select *
 select 주소
 	from v_userbuytbl;
     
--- 뷰는 읽기전용이다. 하지만 아래와 같이 수정은 가능하다.
+-- 뷰는 읽기전용이다. 하지만 아래와 같이 수정은 가능하다. (권장 사항은 아니다.)
 alter view v_userbuytbl
 as
 	select U.userid as '사용자 아이디', U.username as '이름',
@@ -36,7 +36,33 @@ as
     on U.userid = B.userid;
 
 select * 
-	from v_v_userbuytbl;
+	from v_userbuytbl;
 
 select `사용자 아이디`, `이름`, `제품 이름`, `주소`, `전화번호`
 	from v_userbuytbl;
+
+-- 뷰를 삭제하기
+drop view v_userbuytbl;
+
+-- 또 다른 뷰를 만들어보자.
+-- 근데 or replace가 왔다. 이것은 v_usertbl이 있다면,
+-- 아래의 코드로 view를 덮어쓰라는 것이다.
+-- 없다면 만들고...
+create or replace view v_usertbl
+as
+	select userid, username, addr
+    from usertbl;
+
+-- 뷰의 구조를 보면 흡사 테이블과 유사하게 되어있다.
+-- 하지만, 제약조건들은 보이지 않는다는 것을 알 수 있다.    
+desc v_usertbl;
+
+-- 뷰를 통한 수정하기
+-- 뷰를 통한 수정이 가능하다. 그리고 실제 테이블에도 확인해보니 변경이 되어 있다.
+update v_usertbl 
+	set addr = '부산' where userid = 'LKK';
+
+select * from v_usertbl;
+select * from usertbl;
+
+insert into v_usertbl(userid, username, addr) values ('KYA', '김연아', '경기');
