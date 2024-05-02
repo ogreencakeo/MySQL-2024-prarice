@@ -65,4 +65,23 @@ update v_usertbl
 select * from v_usertbl;
 select * from usertbl;
 
+-- 하지만, 아래 코드가 삽입이 되지 않다.
+-- 왜일까 ? 이유는 usertbl에는 birthYear필드가 not null 이기 때문인 것이다.
+-- 하여, 삽입이 되질 않는 것이다.
+-- 아래 데이터를 꼭 삽입을 해주고 싶다면, 뷰를 만들 때 birthYear 컬럼을 추가하든지
+-- 혹은 usertbl의 birhYear라는 컬럼을 default 값을 주든지
+-- null로 설정을 바꿔야 할 것 이다.
 insert into v_usertbl(userid, username, addr) values ('KYA', '김연아', '경기');
+
+-- 뷰를 birthYear를 포함해서 수정하였다.
+create or replace view v_usertbl
+as
+	select userid, username, addr, birthYear
+    from usertbl;
+
+select * from v_usertbl;
+
+-- 그리고 필드를 추가해서 삽입을 해보자.
+insert into v_usertbl(userid, username, addr, birthYear) values ('KYA', '김연아', '경기', '19900505');
+select * from v_usertbl;
+select * from usertbl;
