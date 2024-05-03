@@ -63,3 +63,33 @@ create table tbl4(
     d int 
 );
 
+-- 확인해보면, a필드에 null 값을 허용하지 아니한다라고 나온다.
+-- 그럼 클러스터형 인덱스가 되는 것이다.
+-- 정리를 하자면, 클러스터형 인덱스는 2가지가 될 수 있다. 
+-- 1. PK
+-- 2. unique not null
+show index from tbl4;
+
+insert into tbl4 values (3, 3, 3, 3);
+insert into tbl4 values (1, 1, 1, 1);
+insert into tbl4 values (4, 4, 4, 4);
+insert into tbl4 values (5, 5, 5, 5);
+insert into tbl4 values (6, 6, 6, 6);
+
+select * from tbl4;
+
+-- 만약에 테이블에 PK와 unique not null이 같이 있는 경우 어떻게 될끼?
+-- 결론적으로 얘기하자면, PK가 클러스터형 인덱스가 되고,
+-- nuique not null은 보조 인덱스가 되는 것이다.
+drop table if exists tbl5;
+create table tbl5(
+	-- PK가 없다면 당연히 a가 클러스터형 인덱스가 되지만,
+    -- 여기서는 d 필드가 PK이기 때문에 보조 인덱스가 된다.
+	a int unique not null,
+    b int unique,
+    c int unique,
+    -- 항상 PK가 클러스터형 인덱스가 된다는 것을 기억을 하자.
+    d int primary key
+);
+
+show index from tbl5;
