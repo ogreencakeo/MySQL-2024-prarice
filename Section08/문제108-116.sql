@@ -59,16 +59,44 @@ select * from emp_view;
 -- 문제113
 -- 문제109번에서 만든 emp_view30을 수정 해보자. 기존의 뷰에 급여 컬럼과 
 -- 보너스 컬럼을 추가해서 emp_view30을 만드시오.
+select * from emp_view30;
 
+alter view emp_view30
+as
+	select empno, ename, deptno, sal, comm
+		from emp;
+        
+select * from emp_view30;
 
 -- 문제114
 -- emp_view30 뷰를 이용하여 급여가 600이상인 사람에 대해서
--- 부서번호를 20으로 변경해보시오
+-- 부서번호를 10으로 변경해보시오.
+update emp_view30 
+	set deptno = 10
+where sal >= 600;
+
+select * from emp_view30;
 
 -- 문제115
 -- 부서별 최대 급여와 최소 급여를 출력하는 sal_max_min_view를 emp, dept테이블을
 -- 이용하여 만들어보시오.
+select * from emp;
+select * from dept;
+
+create or replace view sal_max_min_view
+as
+	select E.deptno, D.dname, max(E.sal), min(E.sal) from emp E
+    inner join dept D
+    on E.deptno = D.deptno
+    group by E.deptno;
+    
+select * from sal_max_min_view;
 
 -- 문제116
 -- 지금까지 만든 뷰를 다 제거해보시오.
 -- 1111,'aaaa', 30
+drop view emp_view;
+drop view emp_view30;
+drop view emp_view_dept;
+drop view sal_max_min_view;
+
