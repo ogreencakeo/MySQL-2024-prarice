@@ -95,8 +95,7 @@ select * from sal_max_min_view;
 -- 문제116
 -- 지금까지 만든 뷰를 다 제거해보시오.
 -- 1111,'aaaa', 30
-drop view emp_view;
-drop view emp_view30;
-drop view emp_view_dept;
-drop view sal_max_min_view;
-
+DROP VIEW IF EXISTS emp_view;
+DROP VIEW IF EXISTS emp_view30;
+DROP VIEW IF EXISTS emp_view_dept;
+DROP VIEW IF EXISTS sal_max_min_view;
