@@ -93,3 +93,24 @@ create table tbl5(
 );
 
 show index from tbl5;
+
+select * from usertbl;
+
+alter table usertbl
+	drop primary key;
+
+insert into usertbl values('AAA', '아아아', 1988, '한국', null, null, 190, '20101010');
+-- 위에 PK를 삭제를 하고 나서 아래와 같이 데이터를 추가해보니, 
+-- userid별로 정렬이 안이루어짐을 확인할 수가 있다.
+select * from usertbl; -- AAA가 맨 마지막에 나옴
+
+-- username을 기본키로 설정하기
+alter table usertbl
+add constraint pk_username primary key(username);
+
+-- 조회를 해보면, username의 가나다.... 순으로 자동 정렬이 된 것을 볼수가 있다.
+-- username이 영어사전의 단어라고 생각하면 된다.
+-- 근데, 이런 작업은 현업에서는 절대 하지 않는다.
+-- PK를 드랍하고 추가하는 것은 현업에서는 가히 상상할 수도 없는 것이다.
+select * from usertbl; 
+
