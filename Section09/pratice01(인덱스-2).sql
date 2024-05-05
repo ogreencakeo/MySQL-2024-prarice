@@ -113,3 +113,71 @@ insert into usertbl values('GYM', '김용만', 1960, '미국', NULL, NULL, 170, 
 drop index idx_usertbl_name on usertbl;
 
 show index from usertbl;
+
+-- 2개의 컬럼을 이용해서 보조 인덱스를 만들어보도록 하자.
+create index idx_usertbl_username_birthYear
+	on usertbl(username, birthYear);
+
+-- 확인을 해보니 2개의 컬럼으로 만든 인덱스가 각각 sequence가 1, 2 로 구분이
+-- 되어져 잘 만들어졌다.
+show index from usertbl;
+
+-- 아래와 같이 쿼리를 하게 되면 위에 만든 인덱스가 필히 사용되었을 것이다.
+-- 인덱스를 만든다고 하여 데이터에 영향을 끼치는 것은 전혀 없다.
+-- 다만 속도가 빨라지던지 늦어지던지 둘중에 하나가 될 것이다.
+-- execution plan(실행계획)을 보면 idx_usertbl_username_birthYear
+-- 인덱스를 사용한 것을 확인할 수가 있다.
+-- 물론 이 내용이 지금이야 데이터가 몇 건 안되니 느끼지 못하지만
+-- 대용량 대이테베이스에서는 엄청난 속도 향상을 가져다 줄 것이다.
+select * from usertbl
+	where username = '김국진'
+    and birthYear = 1965;
+    
+-- 국번을 가지고 보조 인덱스를 만들어보자.
+create index idx_usertbl_mobile1
+	on usertbl (mobile1);
+show index from usertbl;
+
+-- 위에서 만들어진 인덱스가 사용되었다.
+-- 하지만, 인덱스로 설정한 컬럼의 데이터가 국한(중복)되어 있다면
+-- 별로 효율적이지 못하다.
+-- 왜일까? 계속 인덱스에 갔다가 페이지에 갔다가 하기 때문인 것이다.
+-- 그래서 대용량 데이터 베이스에 해당 컬럼의 값이 다양(중복불가)한 것에다가
+-- 인덱스를 설정하는 것이 매우 바람직하다.
+select * from usertbl
+	where mobile1 = '011';
+    
+show index from usertbl;
+
+-- 이제는 인덱스를 제거를 해보자.
+-- 인덱스를 제거할 때도 항상 보조인덱스를 먼저 제거해야한다.
+-- 클러스터형 인덱스를 먼저 제거해버리면 보조 인덱스에서 주소를 지정하는 작업을
+-- DB엔진에서 다시 진행한다. 이렇게 되면 DB엔진에 상당한 부담을 지우게 된다.
+-- 제거방법 : 보조 인덱스 제거 -> 클러스터형 인덱스를 제거
+drop index idx_usertbl_addr on usertbl;
+ drop index idx_usertbl_username_birthYear on usertbl;
+ drop index idx_usertbl_mobile1 on usertbl;
+ 
+ -- 이제 클러스터형 인덱스를 제거해보자
+ -- 클러스터형 인덱스는 drop으로 하면 안된다.
+ -- alter table을 이용하자.
+ alter table usertbl 
+	drop primary key;
+
+show table status like 'buytbl';
+desc buytbl;
+
+-- 외래키의 이름을 알아내는 방법은 시스템DB를 사용해서 알아낼 수가 있다.
+select * from information_schema.table_constraints
+	where constraint_schema = 'sqldb';
+
+-- 외래키 제거
+alter table buytbl
+	drop foreign key buytbl_ibfk_1;
+
+-- 기본키 제거
+SHOW COLUMNS FROM usertbl;
+alter table usertbl
+	drop primary key;
+
+show index from usertbl;
