@@ -51,4 +51,32 @@ alter table mixedtbl
 	add constraint UK_mixedtbl_username unique(username);
     
 -- 한 테이블에 클러스터형 인덱스와 보조 인덱스가 각각 같이 생성되어 있다.
+-- 그럼 내부적으로 구성되는 것은 방금 그림을 그린 것과 같이 될 것이다.
+-- 김용만 주소를 찾기 위해서는 클러스터형 인덱스를 이용을 하면 2페이지만 읽으면 된다.
+-- 클러스터형 인덱스는 리프페이지가 곧 데이터 페이지이기 때문이다.
+-- 그에 반해서 보조 인덱스는 데이터 페이지는 건드리지 않고
+-- 별도의 공간의 인덱스를 생성해서 거기 인덱스에 실제 데이터가 들어가 있는
+-- 주소+#오프셋 값이 들어가 있어서 3번 페이지를 읽게 되는 것이다.
 select * from mixedtbl;
+
+-- Section05 초기화 코드
+-- sqldb 초기화 시키자
+use sqldb;
+
+select * from usertbl;
+
+-- 인덱스가 있는지 확인
+show index from usertbl;
+-- 앞에서도 했지만, usertbl의 상태를 보는 것이다. 
+-- data_length가 클러스터형 인덱스의 크기이다.
+-- idx_length는 보조 인덱스의 크기를 나타내는 것이다. 지금은 없기 때문에
+-- 0으로 출력이 된 것을 알 수 있다.
+show table status like 'usertbl';
+
+-- addr컬럼에 보조 인덱스를 생성하는 것이다.
+create index idx_usertbl_addr
+	on usertbl(addr);
+
+-- 보조 인덱스를 만드면 바로 테이블에 적용이 되는 것이 아니라
+-- 직접 테이블에 적용하는 코드를 실행해줘야 한다.
+analyze table usertbl;
