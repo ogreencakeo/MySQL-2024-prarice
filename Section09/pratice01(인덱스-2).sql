@@ -80,3 +80,36 @@ create index idx_usertbl_addr
 -- 보조 인덱스를 만드면 바로 테이블에 적용이 되는 것이 아니라
 -- 직접 테이블에 적용하는 코드를 실행해줘야 한다.
 analyze table usertbl;
+-- 보조 인덱스를 테이블에 적용을 시키니 비로소 index_length가 16kb가
+-- 잡힌 것을 확인 할 수 있다.
+show table status like 'usertbl';
+
+-- birthYear 컬럼에다가 unique index를 만들어주고 실행하니 오류가 발생
+-- 그 이유는 unique 제약조건은 중복 불가이기 때문에 birthYear 컬럼은
+-- unique index의 자격으로 충분하지 않다.
+create unique index idx_usertbl_birthYead
+	on usertbl(birthYear);
+
+select * from usertbl;
+
+-- username에 unique index가 잘 만들어졌다.
+create unique index idx_usertbl_name
+	on usertbl(username);
+
+show index from usertbl;
+
+-- 아래의 데이터를 삽입하면 오류가 발생한다. 분명 userid는 다른데 말이다.
+-- 그 이유는 username을 우리가 위에서 unique index로 만들었다.
+-- 중복을 허용하지 않으니 오류가 나는 것이다.
+-- 동명이인도 있는데 이러한 컬럼에다가 unique index를 잡으면,
+-- '김용만'을 딱 한 명만 저장하는 꼴이 된다.
+-- 현실적으로 이 내용은 맞지 않다.
+-- 하여, 인덱스를 어느 컬럼에 설정을 해야할지 정말 고민을 많이 해야한다.
+-- 아울러, 정말 unique한 것 (주민등록번호, 학번, 전화번호 앞자리)으로
+-- 잡아주는 것이 상당히 현명한 것이다.
+insert into usertbl values('GYM', '김용만', 1960, '미국', NULL, NULL, 170, NULL);
+
+-- 그래서 위에 인덱스를 제거를 했다.
+drop index idx_usertbl_name on usertbl;
+
+show index from usertbl;
