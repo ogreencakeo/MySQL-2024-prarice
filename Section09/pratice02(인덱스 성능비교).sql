@@ -70,3 +70,8 @@ show index from emp;	-- 인덱스 없음
 show index from emp_c;	-- PK 즉, 클러스터형 인덱스 있음
 show index from emp_se;	-- 보조 인덱스 있음
 
+-- 클러스터형 인덱스는 데이터 그 자체가 인덱스를 내포하고 있다. (영어사전 개념)
+-- index_length는 보조 인덱스를 나타내는 것이다.
+-- 하여, emp_se는 데이터 크기가 잡혀져 있는 것을 확인할 수 있다.
+-- 인덱스도 역시 저장공간을 차지한다라고 했다.
+show table status;
