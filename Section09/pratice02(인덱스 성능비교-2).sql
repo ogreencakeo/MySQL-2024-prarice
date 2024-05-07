@@ -93,3 +93,50 @@ show global status like 'innodb_pages_read';
 select * from emp_c 
 	where emp_no = 100000;
 show global status like 'innodb_pages_read';
+
+-- 데이터의 중복도(카디널러티)
+select * 
+	from emp;
+
+alter table emp
+	add index idx_gender(gender);
+
+alter table emp
+	add primary key pk_emp_empno(emp_no);
+
+-- 테이블에 적용하기
+analyze table emp;
+
+-- idx_gender인덱스가 추가 된 것을 볼 수가 있다.
+-- 여기서 유심히 살펴볼 항목은 바로 cardinality 항목이다.
+-- 이 항목은 관계대수를 의미하는 것이다.
+-- 즉, 다시말해 테이블간에 릴레이션을 구성하는 행의 갯수를 의미한다.
+-- 수학에서는 집합을 구성하는 원소들의 개수를 말한다.
+-- 하여, 1:1관계대수 다라고 함은 두 집합의 원소가 같다는 것을 의미한다.
+-- 1:N은 1개의 행에 N개의 행이 연결되는 것이다.
+-- 하여, cardinality가 낮을수록 데이터의 중복도가 엄청 높다는 것이고
+-- 높을수록 데이터 중복도가 낮다는 것이다. (상당히 중요함)
+-- idx_gender는 cardinality가 1이다. 왜? gender컬럼은 M, F로 2개 밖에
+-- 형식이 없고 아울러 30만건에서 둘 중에 하나이니깐 중복도가 엄청난 것이다.
+show index from emp;
+
+select * from emp
+	where gender = 'M'
+    limit 500000;
+
+select *
+	from emp
+    ignore index(idx_gender) -- 인덱스를 사용하지 않겠다라고 명시적으로 알니는 코드
+    where gender = 'M'
+    limit 500000;
+
+-- 결론
+-- 1. 인덱스는 열(컬럼) 단위에 생성되어야 한다.
+-- 2. where 절에서 자주 사용되는 열에 인덱스를 만들어야 효율성이 좋다.
+-- 3. 데이터의 중복도가 높은 열은 인덱스 만들어보아야 효과가 없다.
+-- 4. 외래키 지정한 열의 경우는 자동으로 인덱스가 생성이 된다.
+-- 5. join에 자주 사용되는 열의 경우는 인덱스를 생성해주자.
+-- 6. 인덱스는 단지 읽기에서만 성능이 향상되므로 얼마나 데이터의 변경이 자주
+-- 일어나는지를 고려를 반드시 해야한다.
+-- 7. 클러스터형 인덱스는 테이블당 1개만 생성이 가능하다.
+-- 8. 사용하지 않는 인덱스는 과감히 제거하자 (저장공간 확보 및 부하를 줄여준다.)
